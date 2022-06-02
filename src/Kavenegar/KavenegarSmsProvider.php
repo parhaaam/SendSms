@@ -2,7 +2,6 @@
 
 namespace Parhaaam\SendSms\Kavenegar;
 
-
 use Kavenegar\KavenegarApi;
 use Parhaaam\SendSms\SmsProviderService;
 
