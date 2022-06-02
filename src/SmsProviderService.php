@@ -2,7 +2,7 @@
 
 namespace Parhaaam\SendSms;
 
-interface  SmsProviderService
+interface SmsProviderService
 {
     public function sendSms($message, $sender, $receptor): void;
 

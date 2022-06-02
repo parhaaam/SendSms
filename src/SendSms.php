@@ -19,8 +19,8 @@ class SendSms
 
     public function via($driver = 'default')
     {
-        var_dump($this->configs);
-        return $this->configs;
+        $configs = $this->loadConfig();
+
         if ($driver == 'default') {
             $driver = $this->configs['default'];
         }
@@ -30,17 +30,19 @@ class SendSms
         $config = $this->configs['drivers'][$driver];
         switch ($driver) {
             case 'kavenegar':
-                $this->smsProviderService = new KavenegarSmsProvider($config['key']);
+                $this->smsProviderService = new KavenegarSmsProvider($cofings['key']);
+
                 break;
 
             default:
-                $this->smsProviderService = new KavenegarSmsProvider($config['key']);
+                $this->smsProviderService = new KavenegarSmsProvider($cofings['key']);
+
                 break;
         }
     }
 
     /**
-     * Sends normal sms 
+     * Sends normal sms
      *
      * @return void
      */
@@ -51,7 +53,7 @@ class SendSms
     }
 
     /**
-     * Sends lookup sms 
+     * Sends lookup sms
      *
      * @return void
      */
@@ -72,8 +74,10 @@ class SendSms
         if (is_null($configs)) {
             $configs = static::loadDefaultConfig();
         }
+
         return $configs;
     }
+
     /**
      * Retrieve default config.
      *
@@ -99,10 +103,9 @@ class SendSms
      *
      * @return void
      */
-
     protected function validateConfigs($driver): void
     {
-        if (!isset($this->configs['drivers'][$driver])) {
+        if (! isset(config('sendsms')['drivers'][$driver])) {
             throw new InvalidArgumentException("$driver is not defined in sendSms configs");
         }
     }
