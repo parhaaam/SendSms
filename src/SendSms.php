@@ -2,38 +2,39 @@
 
 namespace Parhaaam\SendSms;
 
+use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use Parhaaam\SendSms\Drivers\Kavenegar\KavenegarSmsProvider;
 
 class SendSms
 {
     private $smsProviderService;
+    protected $configs;
 
-    
     public function __construct()
     {
-        $this->via($driver = 'default');
+        $this->via('default');
+        $this->configs =  self::loadConfig();
     }
 
     public function via($driver = 'default')
     {
-
-        $configs =  $this->loadConfig();
-
+        var_dump($this->configs);
+        return $this->configs;
         if ($driver == 'default') {
-            $driver = $configs['default'];
+            $driver = $this->configs['default'];
         }
 
         $this->validateConfigs($driver);
 
-        $cofings = $configs['drivers'][$driver];
+        $config = $this->configs['drivers'][$driver];
         switch ($driver) {
             case 'kavenegar':
-                $this->smsProviderService = new KavenegarSmsProvider($cofings['key']);
+                $this->smsProviderService = new KavenegarSmsProvider($config['key']);
                 break;
 
             default:
-                $this->smsProviderService = new KavenegarSmsProvider($cofings['key']);
+                $this->smsProviderService = new KavenegarSmsProvider($config['key']);
                 break;
         }
     }
@@ -101,7 +102,7 @@ class SendSms
 
     protected function validateConfigs($driver): void
     {
-        if (!isset(config('sendsms')['drivers'][$driver])) {
+        if (!isset($this->configs['drivers'][$driver])) {
             throw new InvalidArgumentException("$driver is not defined in sendSms configs");
         }
     }
