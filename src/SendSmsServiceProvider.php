@@ -2,9 +2,9 @@
 
 namespace Parhaaam\SendSms;
 
+use Parhaaam\SendSms\Commands\SendSmsCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Parhaaam\SendSms\Commands\SendSmsCommand;
 
 class SendSmsServiceProvider extends PackageServiceProvider
 {
