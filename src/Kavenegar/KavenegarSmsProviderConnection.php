@@ -2,12 +2,13 @@
 
 namespace Parhaaam\SendSms\Kavenegar;
 
-use Parhaaam\SendSms\SmsProviderConnetcion;
 use Kavenegar\KavenegarApi;
+use Parhaaam\SendSms\SmsProviderConnetcion;
 
 class KavenegarSmsProviderConnection implements SmsProviderConnetcion
 {
     protected $apiKey;
+
     public function __construct($apiKey)
     {
         $this->apiKey = $apiKey;
@@ -26,11 +27,12 @@ class KavenegarSmsProviderConnection implements SmsProviderConnetcion
             echo $e->errorMessage();
         }
     }
+
     public function sendLookup($receptor, $template, ...$tokens): void
     {
         try {
-            $api    = new KavenegarApi($this->apiKey);
-            $token  = $tokens[0] ?? '';
+            $api = new KavenegarApi($this->apiKey);
+            $token = $tokens[0] ?? '';
             $token2 = $tokens[1] ?? '';
             $token3 = $tokens[2] ?? '';
             $result = $api->VerifyLookup($receptor, $token, $token2, $token3, $template, $type = 'sms');

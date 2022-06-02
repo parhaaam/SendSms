@@ -2,8 +2,9 @@
 
 namespace Parhaaam\SendSms;
 
-interface  SmsProviderConnetcion
+interface SmsProviderConnetcion
 {
     public function sendSms($message, $sender, $receptor): void;
+
     public function sendLookup($receptor, $template, ...$tokens): void;
 }
