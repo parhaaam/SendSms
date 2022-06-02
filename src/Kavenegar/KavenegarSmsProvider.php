@@ -2,10 +2,11 @@
 
 namespace Parhaaam\SendSms\Kavenegar;
 
-use Parhaaam\SendSms\SmsProviderConnetcion;
-use Kavenegar\KavenegarApi;
 
-class KavenegarSmsProviderConnection implements SmsProviderConnetcion
+use Kavenegar\KavenegarApi;
+use Parhaaam\SendSms\SmsProviderService;
+
+class KavenegarSmsProvider implements SmsProviderService
 {
     protected $apiKey;
     public function __construct($apiKey)
