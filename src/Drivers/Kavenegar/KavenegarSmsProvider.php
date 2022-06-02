@@ -1,6 +1,6 @@
 <?php
 
-namespace Parhaaam\SendSms\Kavenegar;
+namespace Parhaaam\SendSms\Drivers\Kavenegar;
 
 
 use Kavenegar\KavenegarApi;

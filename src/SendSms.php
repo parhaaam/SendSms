@@ -3,7 +3,7 @@
 namespace Parhaaam\SendSms;
 
 use InvalidArgumentException;
-use Parhaaam\SendSms\Kavenegar\KavenegarSmsProvider;
+use Parhaaam\SendSms\Drivers\Kavenegar\KavenegarSmsProvider;
 
 class SendSms
 {
