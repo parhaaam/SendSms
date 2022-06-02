@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Parhaaam\SendSms\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class SendSmsCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'sendsms';
 
     public $description = 'My command';
 
