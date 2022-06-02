@@ -8,12 +8,12 @@ use Parhaaam\SendSms\SmsProviderService;
 class SmsIr implements SmsProviderService
 {
     private $apiKey;
-    const APIPATH = "https://RestfulSms.com/%s/%s";
-    const VERSION = "1.2";
+    public const APIPATH = "https://RestfulSms.com/%s/%s";
+    public const VERSION = "1.2";
 
     public function __construct($apiKey)
     {
-        if (!$this->apiKey = $apiKey) {
+        if (! $this->apiKey = $apiKey) {
             throw new InvalidArgumentException('API key is required!');
         }
     }
@@ -28,12 +28,12 @@ class SmsIr implements SmsProviderService
         $defaultHeaders = collect([
             'Accept: application/json',
             'Content-Type: application/x-www-form-urlencoded',
-            'charset: utf-8'
+            'charset: utf-8',
         ]);
         $headers = collect($headers);
         $headers = $defaultHeaders->merge($headers)->toArray();
         $fields_string = "";
-        if (!is_null($data)) {
+        if (! is_null($data)) {
             $fields_string = http_build_query($data);
         }
 
@@ -62,19 +62,20 @@ class SmsIr implements SmsProviderService
 
         if ($code != 200 && is_null($json_response)) {
             return "Request have errors " . $code;
-            //throw new HttpException("Request have errors", $code);
+        //throw new HttpException("Request have errors", $code);
         } else {
             if ($json_response->IsSuccessful == true) {
                 if (isset($data['UserApiKey'])) {
                     return
                         [
                             'TokenKey' => $json_response->TokenKey,
-                            'Response' => $json_response
+                            'Response' => $json_response,
                         ];
                 } else {
                     return $json_response;
                 }
             }
+
             return $json_response;
         }
     }
@@ -92,15 +93,14 @@ class SmsIr implements SmsProviderService
     {
         $path = $this->get_path("MessageSend");
         $params = [
-            'Messages'      => (array)$messages,
+            'Messages' => (array)$messages,
             'MobileNumbers' => (array)$receptor,
-            'LineNumber'    => $sender
+            'LineNumber' => $sender,
         ];
         $headers[] = 'x-sms-ir-secure-token: ' . $this->getToken()['TokenKey'];
 
         $this->execute($path, $params, $headers);
     }
-
 
     /**
      * @param array $parameters = all parameters and parameters value as an array
@@ -112,8 +112,8 @@ class SmsIr implements SmsProviderService
     {
         $path = $this->get_path("UltraFastSend");
         $params = [
-            'TemplateId'    => $template,
-            'Mobile'        => $receptor
+            'TemplateId' => $template,
+            'Mobile' => $receptor,
         ];
         foreach ($tokens as $key => $value) {
             $params['ParameterArray'][] = ['Parameter' => $key, 'ParameterValue' => $value];
@@ -134,8 +134,9 @@ class SmsIr implements SmsProviderService
         $params = [
             'UserApiKey' => $this->apiKey,
             'SecretKey' => $this->secretKey,
-            'System' => 'php_rest_v_1_2'
+            'System' => 'php_rest_v_1_2',
         ];
+
         return $this->execute($path, $params);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Parhaaam\SendSms;
 
-use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use Parhaaam\SendSms\Drivers\Kavenegar\KavenegarSmsProvider;
 
@@ -14,7 +13,7 @@ class SendSms
     public function __construct()
     {
         $this->via('default');
-        $this->configs =  self::loadConfig();
+        $this->configs = self::loadConfig();
     }
 
     public function via($driver = 'default')
