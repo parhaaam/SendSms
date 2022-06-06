@@ -18,8 +18,8 @@ class SendSmsServiceProvider extends PackageServiceProvider
         $package
             ->name('sendsms')
             ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_sendsms_table')
-            ->hasCommand(SendSmsCommand::class);
+            // ->hasViews()
+            // ->hasMigration('create_sendsms_table')
+            // ->hasCommand(SendSmsCommand::class);
     }
 }
