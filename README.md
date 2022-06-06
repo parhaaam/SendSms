@@ -16,13 +16,13 @@ Easily send sms in laravel with any sms service provider.
 | SMS.IR |
 ## Installation
 
--install the package via composer:
+1. install the package via composer:
 
 ```bash
 composer require parhaaam/sendsms
 ```
 
--publish the config file with:
+2. publish the config file with:
 
 ```bash
 php artisan vendor:publish --tag="sendsms-config"
@@ -53,6 +53,7 @@ return [
 // Send Lookup sms
 $sendSms = new Parhaaam\SendSms();
 $sendSms->sendLookup($receptor = "__phone_number__", $template = "loginVerify", $tokens = ["Test"]);
+// will send sms using default sms provider which has been set in config/sendsms.php
 
 // Send Lookup sms with sms.ir
 $sendSms = new SendSms();
