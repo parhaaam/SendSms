@@ -2,7 +2,6 @@
 
 namespace Parhaaam\SendSms;
 
-use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use Parhaaam\SendSms\Drivers\Kavenegar\KavenegarSmsProvider;
 use Parhaaam\SendSms\Drivers\SmsIr\SmsIr;
