@@ -5,22 +5,37 @@ namespace Parhaaam\SendSms;
 use Illuminate\Support\Facades\Log;
 use InvalidArgumentException;
 use Parhaaam\SendSms\Drivers\Kavenegar\KavenegarSmsProvider;
+use Parhaaam\SendSms\Drivers\SmsIr\SmsIr;
 
 class SendSms
 {
+
+    /**
+     * Sms Provider service
+     *
+     * @var SmsProviderService
+     */
     private $smsProviderService;
+
+    /**
+     * Sms drivers configs
+     *
+     * @var string
+     */
     protected $configs;
 
-    public function __construct()
+    function __construct()
     {
+        $this->configs = static::loadConfig();
         $this->via('default');
-        $this->configs =  self::loadConfig();
     }
-
+    /**
+     * Sets sms driver
+     *
+     * @return void
+     */
     public function via($driver = 'default')
     {
-        $configs = $this->loadConfig();
-
         if ($driver == 'default') {
             $driver = $this->configs['default'];
         }
@@ -30,15 +45,20 @@ class SendSms
         $config = $this->configs['drivers'][$driver];
         switch ($driver) {
             case 'kavenegar':
-                $this->smsProviderService = new KavenegarSmsProvider($cofings['key']);
+                $this->smsProviderService = new KavenegarSmsProvider($config['key']);
+
+                break;
+            case 'smsir':
+                $this->smsProviderService = new SmsIr($config['key'],$config['secret']);
 
                 break;
 
             default:
-                $this->smsProviderService = new KavenegarSmsProvider($cofings['key']);
+                $this->smsProviderService = new KavenegarSmsProvider($config['key']);
 
                 break;
         }
+        return $this;
     }
 
     /**
@@ -46,10 +66,10 @@ class SendSms
      *
      * @return void
      */
-    public function sendSms($message, $sender, $receptor): void
+    public function sendSms($message, $sender, $receptor): mixed
     {
         $smsProvider = $this->smsProviderService;
-        $smsProvider->sendSms($message, $sender, $receptor);
+        return $smsProvider->sendSms($message, $sender, $receptor);
     }
 
     /**
@@ -57,10 +77,10 @@ class SendSms
      *
      * @return void
      */
-    public function sendLookup($receptor, $template, ...$tokens): void
+    public function sendLookup($receptor, $template, ...$tokens): mixed
     {
         $smsProvider = $this->smsProviderService;
-        $smsProvider->sendLookup($receptor, $template, ...$tokens);
+        return $smsProvider->sendLookup($receptor, $template, ...$tokens);
     }
 
     /**
@@ -105,7 +125,7 @@ class SendSms
      */
     protected function validateConfigs($driver): void
     {
-        if (! isset(config('sendsms')['drivers'][$driver])) {
+        if (!isset($this->configs['drivers'][$driver])) {
             throw new InvalidArgumentException("$driver is not defined in sendSms configs");
         }
     }

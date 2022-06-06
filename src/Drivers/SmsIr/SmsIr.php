@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Helpers;
+namespace Parhaaam\SendSms\Drivers\SmsIr;
+
 
 use InvalidArgumentException;
 use Parhaaam\SendSms\SmsProviderService;
@@ -8,14 +9,14 @@ use Parhaaam\SendSms\SmsProviderService;
 class SmsIr implements SmsProviderService
 {
     private $apiKey;
+    private $secret;
     const APIPATH = "https://RestfulSms.com/%s/%s";
     const VERSION = "1.2";
 
-    public function __construct($apiKey)
+    public function __construct($apiKey, $secret)
     {
-        if (!$this->apiKey = $apiKey) {
-            throw new InvalidArgumentException('API key is required!');
-        }
+        $this->apiKey = $apiKey;
+        $this->secret = $secret;
     }
 
     protected function get_path($method, $base = 'api')
@@ -88,7 +89,7 @@ class SmsIr implements SmsProviderService
      *
      * @return mixed, return status
      */
-    public function sendSms($messages, $receptor, $sender): void
+    public function sendSms($messages, $receptor, $sender): mixed
     {
         $path = $this->get_path("MessageSend");
         $params = [
@@ -98,7 +99,7 @@ class SmsIr implements SmsProviderService
         ];
         $headers[] = 'x-sms-ir-secure-token: ' . $this->getToken()['TokenKey'];
 
-        $this->execute($path, $params, $headers);
+        return $this->execute($path, $params, $headers);
     }
 
 
@@ -108,7 +109,7 @@ class SmsIr implements SmsProviderService
      * @param $number = phone number
      * @return mixed = the result
      */
-    public function sendLookup($receptor, $template,  ...$tokens): void
+    public function sendLookup($receptor, $template, array $tokens): mixed
     {
         $path = $this->get_path("UltraFastSend");
         $params = [
@@ -118,9 +119,10 @@ class SmsIr implements SmsProviderService
         foreach ($tokens as $key => $value) {
             $params['ParameterArray'][] = ['Parameter' => $key, 'ParameterValue' => $value];
         }
+        // return $params;
         $headers[] = 'x-sms-ir-secure-token: ' . $this->getToken()['TokenKey'];
 
-        $this->execute($path, $params, $headers);
+        return $this->execute($path, $params, $headers);
     }
 
     /**
@@ -133,9 +135,11 @@ class SmsIr implements SmsProviderService
         $path = $this->get_path("Token");
         $params = [
             'UserApiKey' => $this->apiKey,
-            'SecretKey' => $this->secretKey,
+            'SecretKey' => $this->secret,
             'System' => 'php_rest_v_1_2'
         ];
         return $this->execute($path, $params);
     }
+
+    
 }
