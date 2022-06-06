@@ -2,16 +2,14 @@
 
 namespace Parhaaam\SendSms\Drivers\SmsIr;
 
-
-use InvalidArgumentException;
 use Parhaaam\SendSms\SmsProviderService;
 
 class SmsIr implements SmsProviderService
 {
     private $apiKey;
     private $secret;
-    const APIPATH = "https://RestfulSms.com/%s/%s";
-    const VERSION = "1.2";
+    public const APIPATH = "https://RestfulSms.com/%s/%s";
+    public const VERSION = "1.2";
 
     public function __construct($apiKey, $secret)
     {
@@ -136,11 +134,9 @@ class SmsIr implements SmsProviderService
         $params = [
             'UserApiKey' => $this->apiKey,
             'SecretKey' => $this->secret,
-            'System' => 'php_rest_v_1_2'
+            'System' => 'php_rest_v_1_2',
         ];
 
         return $this->execute($path, $params);
     }
-
-    
 }

@@ -8,7 +8,6 @@ use Parhaaam\SendSms\Drivers\SmsIr\SmsIr;
 
 class SendSms
 {
-
     /**
      * Sms Provider service
      *
@@ -23,11 +22,12 @@ class SendSms
      */
     protected $configs;
 
-    function __construct()
+    public function __construct()
     {
         $this->configs = static::loadConfig();
         $this->via('default');
     }
+
     /**
      * Sets sms driver
      *
@@ -48,7 +48,7 @@ class SendSms
 
                 break;
             case 'smsir':
-                $this->smsProviderService = new SmsIr($config['key'],$config['secret']);
+                $this->smsProviderService = new SmsIr($config['key'], $config['secret']);
 
                 break;
 
@@ -57,6 +57,7 @@ class SendSms
 
                 break;
         }
+
         return $this;
     }
 
@@ -68,6 +69,7 @@ class SendSms
     public function sendSms($message, $sender, $receptor): mixed
     {
         $smsProvider = $this->smsProviderService;
+
         return $smsProvider->sendSms($message, $sender, $receptor);
     }
 
@@ -79,6 +81,7 @@ class SendSms
     public function sendLookup($receptor, $template, ...$tokens): mixed
     {
         $smsProvider = $this->smsProviderService;
+
         return $smsProvider->sendLookup($receptor, $template, ...$tokens);
     }
 
@@ -124,7 +127,7 @@ class SendSms
      */
     protected function validateConfigs($driver): void
     {
-        if (!isset($this->configs['drivers'][$driver])) {
+        if (! isset($this->configs['drivers'][$driver])) {
             throw new InvalidArgumentException("$driver is not defined in sendSms configs");
         }
     }
