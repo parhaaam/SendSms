@@ -1,5 +1,5 @@
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/support-ukraine.svg?t=1" />](https://supportukrainenow.org)
+
 
 # The easiest way to send Sms inside your Laravel App
 
@@ -8,32 +8,21 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/parhaaam/sendsms/Check%20&%20fix%20styling?label=code%20style)](https://github.com/parhaaam/sendsms/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/parhaaam/sendsms.svg?style=flat-square)](https://packagist.org/packages/parhaaam/sendsms)
 
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
-
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/SendSms.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/SendSms)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
-
+Easily send sms in laravel with any sms service provider.
+## Supported Providers
+| Provider   |
+|------------|
+| Kavenegar |
+| SMS.IR |
 ## Installation
 
-You can install the package via composer:
+-install the package via composer:
 
 ```bash
 composer require parhaaam/sendsms
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag="sendsms-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
+-publish the config file with:
 
 ```bash
 php artisan vendor:publish --tag="sendsms-config"
@@ -43,26 +32,34 @@ This is the contents of the published config file:
 
 ```php
 return [
+
+    'default' => 'kavenegar',
+    'drivers' => [
+        'kavenegar' => [
+            'key'  => env('kavenegar_key', ''),
+        ],
+        'smsir' => [
+            'key'    => env('smsir_key', ''),
+            'secret' => env('smsir_key', ''),
+        ]
+    ]
 ];
 ```
 
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag="sendsms-views"
-```
 
 ## Usage
 
 ```php
+// Send Lookup sms
 $sendSms = new Parhaaam\SendSms();
-echo $sendSms->echoPhrase('Hello, Parhaaam!');
-```
+$sendSms->sendLookup($receptor = "__phone_number__", $template = "loginVerify", $tokens = ["Test"]);
 
-## Testing
+// Send Lookup sms with sms.ir
+$sendSms = new SendSms();
+$sendSms
+    ->via('smsir')
+    ->sendLookup($receptor = "__phone_number__", $template = "19737", ["token_one_name" => "token_value", "token_two_name" => "token_two_value"]);
 
-```bash
-composer test
 ```
 
 ## Changelog
