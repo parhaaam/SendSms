@@ -4,7 +4,7 @@ namespace Parhaaam\SendSms;
 
 use Parhaaam\SendSms\Traits\HasConfigs;
 
-class SendSms
+final class SendSms
 {
     use HasConfigs;
 
@@ -13,7 +13,7 @@ class SendSms
      *
      * @var SmsProviderService
      */
-    private $smsProviderService;
+    protected $smsProviderService;
 
 
     /**
@@ -21,7 +21,7 @@ class SendSms
      *
      * @var SendSms
      */
-    private static $instance;
+    protected static $instance;
 
     public function __construct()
     {
@@ -30,7 +30,7 @@ class SendSms
 
     /**
      * Get Instance of SendSms method statically
-     * 
+     * @return SendSms
      */
     public static function getInstance(): SendSms
     {

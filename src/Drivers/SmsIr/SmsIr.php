@@ -81,15 +81,6 @@ class SmsIr implements SmsProviderService
         }
     }
 
-    /**
-     * Simple send message with sms.ir account and line number
-     *
-     * @param $messages = Messages - Count must be equal with $receptors
-     * @param $numbers = Numbers - must be equal with $messages
-     * @param null $sendDateTime = don't fill it if you want to send message now
-     *
-     * @return mixed, return status
-     */
     public function sendSms($messages, $receptor, $sender): mixed
     {
         $path = $this->get_path("MessageSend");
@@ -103,12 +94,7 @@ class SmsIr implements SmsProviderService
         return $this->execute($path, $params, $headers);
     }
 
-    /**
-     * @param array $parameters = all parameters and parameters value as an array
-     * @param $template_id = you must create a template in sms.ir and put your template id here
-     * @param $number = phone number
-     * @return mixed = the result
-     */
+   
     public function sendLookup($receptor, $template, array $tokens): mixed
     {
         $path = $this->get_path("UltraFastSend");
@@ -125,11 +111,7 @@ class SmsIr implements SmsProviderService
         return $this->execute($path, $params, $headers);
     }
 
-    /**
-     * this method used in every request to get the token at first.
-     *
-     * @return mixed - the Token for use api
-     */
+   
     public function getToken()
     {
         $path = $this->get_path("Token");

@@ -10,7 +10,7 @@ trait HasConfigs
      *
      * @return array
      */
-    private static function getConfigs(): array
+    protected static function getConfigs(): array
     {
         return require(static::getConfigPath());
     }
@@ -20,7 +20,7 @@ trait HasConfigs
      *
      * @return string
      */
-    private static function getConfigPath(): string
+    protected static function getConfigPath(): string
     {
         return  __DIR__ . '/../../config/sendsms.php';
     }
@@ -28,9 +28,9 @@ trait HasConfigs
     /**
      * Return related driver specs to driver key
      *
-     * @return SmsProviderService
+     * @return array
      */
-    private static function getDriverFromConfigs(string $driverKey): array
+    protected static function getDriverFromConfigs(string $driverKey): array
     {
         self::checkConfigHasDriver($driverKey);
         return self::getDrivePathInConfigs()[$driverKey];
@@ -39,9 +39,9 @@ trait HasConfigs
     /**
      * Return driver array from configs
      *
-     * @return SmsProviderService
+     * @return array
      */
-    private static function getDrivePathInConfigs(): array
+    protected static function getDrivePathInConfigs(): array
     {
         return  self::getConfigs()['drivers'];
     }
@@ -49,9 +49,9 @@ trait HasConfigs
     /**
      * check driver has the given key
      *
-     * @return array|string
+     * @return void
      */
-    private static function CheckDriverConfigsKeyExists(string $driver, string $key): void
+    protected static function CheckDriverConfigsKeyExists(string $driver, string $key): void
     {
         if (!isset(static::getDriverFromConfigs($driver)[$key])) {
             throw new \InvalidArgumentException("[$driver] is does not have the [$key] in sendSms configs at config/sendsms.php");
@@ -74,9 +74,9 @@ trait HasConfigs
      *
      * @return void
      */
-    private static function checkConfigHasDriver(string $driverKey): void
+    protected static function checkConfigHasDriver(string $driverKey): void
     {
-        if (!isset(self::getDrivePathInConfig()[$driverKey])) {
+        if (!isset(self::getDrivePathInConfigs()[$driverKey])) {
             throw new \InvalidArgumentException("[$driverKey] is not defined in sendSms configs at config/sendsms.php");
         }
     }
