@@ -2,12 +2,12 @@
 
 namespace Parhaaam\SendSms;
 
-use InvalidArgumentException;
-use Parhaaam\SendSms\Drivers\Kavenegar\KavenegarSmsProvider;
-use Parhaaam\SendSms\Drivers\SmsIr\SmsIr;
+use Parhaaam\SendSms\Traits\HasConfigs;
 
 class SendSms
 {
+    use HasConfigs;
+
     /**
      * Sms Provider service
      *
@@ -15,120 +15,122 @@ class SendSms
      */
     private $smsProviderService;
 
+
     /**
-     * Sms drivers configs
+     * SendSms Instance
      *
-     * @var string
+     * @var SendSms
      */
-    protected $configs;
+    private static $instance;
 
     public function __construct()
     {
-        $this->configs = static::loadConfig();
-        $this->via('default');
+        $this->initialDefaultBehaviour();
+    }
+
+    /**
+     * Get Instance of SendSms method statically
+     * 
+     */
+    public static function getInstance(): SendSms
+    {
+        if (is_null(static::$instance)) {
+            static::$instance = new static();
+        }
+        return static::$instance;
+    }
+
+    /**
+     * smsProviderService setter
+     *
+     */
+    private function setSmsProviderService(SmsProviderService $smsProviderService): void
+    {
+        $this->smsProviderService = $smsProviderService;
+    }
+
+    /**
+     * smsProviderService getter
+     *
+     * @return SmsProviderService
+     */
+    private function getSmsProviderService(): SmsProviderService
+    {
+        return $this->smsProviderService;
+    }
+
+
+    /**
+     * Implementation of php callStatic magic
+     * method to use this class statically
+     */
+    public static function __callStatic($name, $arguments)
+    {
+        return static::getInstance()->$name(...$arguments);
     }
 
     /**
      * Sets sms driver
      *
-     * @return void
+     * @return SendSms
      */
-    public function via($driver = 'default')
+    public function via(string $driverKey): SendSms
     {
-        if ($driver == 'default') {
-            $driver = $this->configs['default'];
-        }
-
-        $this->validateConfigs($driver);
-
-        $config = $this->configs['drivers'][$driver];
-        switch ($driver) {
-            case 'kavenegar':
-                $this->smsProviderService = new KavenegarSmsProvider($config['key']);
-
-                break;
-            case 'smsir':
-                $this->smsProviderService = new SmsIr($config['key'], $config['secret']);
-
-                break;
-
-            default:
-                $this->smsProviderService = new KavenegarSmsProvider($config['key']);
-
-                break;
-        }
-
+        $smsProviderService = $this->getSmsProviderServiceFromDriver($driverKey);
+        $this->setSmsProviderService($smsProviderService);
         return $this;
     }
 
     /**
      * Sends normal sms
      *
-     * @return void
+     * @return mixed
      */
     public function sendSms($message, $sender, $receptor): mixed
     {
-        $smsProvider = $this->smsProviderService;
-
-        return $smsProvider->sendSms($message, $sender, $receptor);
+        return $this->getSmsProviderService()->sendSms($message, $sender, $receptor);
     }
 
     /**
      * Sends lookup sms
      *
-     * @return void
+     * @return mixed
      */
     public function sendLookup($receptor, $template, ...$tokens): mixed
     {
-        $smsProvider = $this->smsProviderService;
-
-        return $smsProvider->sendLookup($receptor, $template, ...$tokens);
+        return $this->getSmsProviderService()->sendLookup($receptor, $template, ...$tokens);
     }
 
     /**
-     * Retrieve  config data.
-     *
-     * @return array
-     */
-    protected function loadConfig(): array
-    {
-        $configs = config('sendsms');
-        if (is_null($configs)) {
-            $configs = static::loadDefaultConfig();
-        }
-
-        return $configs;
-    }
-
-    /**
-     * Retrieve default config.
-     *
-     * @return array
-     */
-    protected function loadDefaultConfig(): array
-    {
-        return require(static::getDefaultConfigPath());
-    }
-
-    /**
-     * Retrieve Default config's path.
-     *
-     * @return string
-     */
-    protected static function getDefaultConfigPath(): string
-    {
-        return dirname(__DIR__) . '/config/sendsms.php';
-    }
-
-    /**
-     * Validate Configs.
+     * Checks if driver has provider class defined in configs
      *
      * @return void
      */
-    protected function validateConfigs($driver): void
+    protected function checkSmsProviderServiceFromDriverExists(string $driverKey): void
     {
-        if (! isset($this->configs['drivers'][$driver])) {
-            throw new InvalidArgumentException("$driver is not defined in sendSms configs");
+        if (!isset(self::getDriverFromConfigs($driverKey)['provider_class'])) {
+            throw new \InvalidArgumentException("[$driverKey] does not has provider_class in sendSms configs at config/sendsms.php");
         }
+    }
+
+    /**
+     * Return related SmsProviderClass to driver key
+     *
+     * @return SmsProviderService
+     */
+    protected function getSmsProviderServiceFromDriver(string $driverKey): SmsProviderService
+    {
+        $this->checkSmsProviderServiceFromDriverExists($driverKey);
+        return self::getDriverFromConfigs($driverKey)['provider_class'];
+    }
+
+    /**
+     * Initial default behaviour of the SendSms class
+     *
+     * @return void
+     */
+    protected function initialDefaultBehaviour(): void
+    {
+        $this->via('default');
     }
 }
