@@ -3,18 +3,20 @@
 namespace Parhaaam\SendSms\Drivers\SmsIr;
 
 use Parhaaam\SendSms\SmsProviderService;
+use Parhaaam\SendSms\Traits\HasConfigs;
 
 class SmsIr implements SmsProviderService
 {
+    use HasConfigs;
     private $apiKey;
     private $secret;
     public const APIPATH = "https://RestfulSms.com/%s/%s";
     public const VERSION = "1.2";
 
-    public function __construct($apiKey, $secret)
+    public function __construct()
     {
-        $this->apiKey = $apiKey;
-        $this->secret = $secret;
+        $this->apiKey = static::getDriverConfigsByKey("smsir","key");
+        $this->secret = static::getDriverConfigsByKey("smsir","secret");
     }
 
     protected function get_path($method, $base = 'api')

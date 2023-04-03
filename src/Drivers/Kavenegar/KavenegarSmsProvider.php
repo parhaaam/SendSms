@@ -4,14 +4,16 @@ namespace Parhaaam\SendSms\Drivers\Kavenegar;
 
 use Kavenegar\KavenegarApi;
 use Parhaaam\SendSms\SmsProviderService;
+use Parhaaam\SendSms\Traits\HasConfigs;
 
 class KavenegarSmsProvider implements SmsProviderService
 {
+    use HasConfigs;
     protected $apiKey;
 
-    public function __construct($apiKey)
+    public function __construct()
     {
-        $this->apiKey = $apiKey;
+        $this->apiKey = static::getDriverConfigsByKey("kavenegar" , "key");
     }
 
     public function sendSms($message, $sender, $receptor)
