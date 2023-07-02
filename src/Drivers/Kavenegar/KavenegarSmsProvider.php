@@ -13,7 +13,7 @@ class KavenegarSmsProvider implements SmsProviderService
 
     public function __construct()
     {
-        $this->apiKey = static::getDriverConfigsByKey("kavenegar" , "key");
+        $this->apiKey = static::getDriverConfigsByKey("kavenegar", "key");
     }
 
     public function sendSms($message, $sender, $receptor)

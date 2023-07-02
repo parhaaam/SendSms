@@ -37,6 +37,7 @@ final class SendSms
         if (is_null(static::$instance)) {
             static::$instance = new static();
         }
+
         return static::$instance;
     }
 
@@ -59,7 +60,6 @@ final class SendSms
         return $this->smsProviderService;
     }
 
-
     /**
      * Implementation of php callStatic magic
      * method to use this class statically
@@ -78,6 +78,7 @@ final class SendSms
     {
         $smsProviderService = $this->getSmsProviderServiceFromDriver($driverKey);
         $this->setSmsProviderService($smsProviderService);
+
         return $this;
     }
 
@@ -108,7 +109,7 @@ final class SendSms
      */
     protected function checkSmsProviderServiceFromDriverExists(string $driverKey): void
     {
-        if (!isset(self::getDriverFromConfigs($driverKey)['provider_class'])) {
+        if (! isset(self::getDriverFromConfigs($driverKey)['provider_class'])) {
             throw new \InvalidArgumentException("[$driverKey] does not has provider_class in sendSms configs at config/sendsms.php");
         }
     }
@@ -121,6 +122,7 @@ final class SendSms
     protected function getSmsProviderServiceFromDriver(string $driverKey): SmsProviderService
     {
         $this->checkSmsProviderServiceFromDriverExists($driverKey);
+
         return self::getDriverFromConfigs($driverKey)['provider_class'];
     }
 

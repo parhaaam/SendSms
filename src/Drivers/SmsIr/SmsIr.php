@@ -15,8 +15,8 @@ class SmsIr implements SmsProviderService
 
     public function __construct()
     {
-        $this->apiKey = static::getDriverConfigsByKey("smsir","key");
-        $this->secret = static::getDriverConfigsByKey("smsir","secret");
+        $this->apiKey = static::getDriverConfigsByKey("smsir", "key");
+        $this->secret = static::getDriverConfigsByKey("smsir", "secret");
     }
 
     protected function get_path($method, $base = 'api')
@@ -63,7 +63,7 @@ class SmsIr implements SmsProviderService
 
         if ($code != 200 && is_null($json_response)) {
             return "Request have errors " . $code;
-        //throw new HttpException("Request have errors", $code);
+            //throw new HttpException("Request have errors", $code);
         } else {
             if ($json_response->IsSuccessful == true) {
                 if (isset($data['UserApiKey'])) {
@@ -94,7 +94,6 @@ class SmsIr implements SmsProviderService
         return $this->execute($path, $params, $headers);
     }
 
-   
     public function sendLookup($receptor, $template, array $tokens): mixed
     {
         $path = $this->get_path("UltraFastSend");
@@ -111,7 +110,6 @@ class SmsIr implements SmsProviderService
         return $this->execute($path, $params, $headers);
     }
 
-   
     public function getToken()
     {
         $path = $this->get_path("Token");
