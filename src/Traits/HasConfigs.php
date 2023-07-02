@@ -4,7 +4,6 @@ namespace Parhaaam\SendSms\Traits;
 
 trait HasConfigs
 {
-
     /**
      * Retrieve default config.
      *
@@ -33,6 +32,7 @@ trait HasConfigs
     protected static function getDriverFromConfigs(string $driverKey): array
     {
         self::checkConfigHasDriver($driverKey);
+
         return self::getDrivePathInConfigs()[$driverKey];
     }
 
@@ -53,7 +53,7 @@ trait HasConfigs
      */
     protected static function CheckDriverConfigsKeyExists(string $driver, string $key): void
     {
-        if (!isset(static::getDriverFromConfigs($driver)[$key])) {
+        if (! isset(static::getDriverFromConfigs($driver)[$key])) {
             throw new \InvalidArgumentException("[$driver] is does not have the [$key] in sendSms configs at config/sendsms.php");
         }
     }
@@ -66,6 +66,7 @@ trait HasConfigs
     public static function getDriverConfigsByKey(string $driver, string $key): array|string
     {
         static::CheckDriverConfigsKeyExists($driver,  $key);
+
         return static::getDriverFromConfigs($driver)[$key];
     }
 
@@ -76,7 +77,7 @@ trait HasConfigs
      */
     protected static function checkConfigHasDriver(string $driverKey): void
     {
-        if (!isset(self::getDrivePathInConfigs()[$driverKey])) {
+        if (! isset(self::getDrivePathInConfigs()[$driverKey])) {
             throw new \InvalidArgumentException("[$driverKey] is not defined in sendSms configs at config/sendsms.php");
         }
     }
